@@ -75,3 +75,14 @@ const displayMovements = function (movements) {
   });
 };
 displayMovements(account1.movements);
+// const user = 'slady deja';
+
+const createUsernames = function (user) {
+  const username = user
+    .toLowerCase()
+    .split(' ')
+    .map(name => name[0])
+    .join('');
+  return username;
+};
+console.log(createUsernames('Slady Dejanovic'));
