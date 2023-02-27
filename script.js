@@ -95,3 +95,18 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 console.log(accounts);
+
+/////  pipeline (chaining methods)
+const eurToUsd = 1.1;
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const totalDepositsUSD = movements
+  .filter(mov => mov > 0)
+  // .map((mov, i, arr) => {
+  //if there is a bug, we can check it with console.log by accessing arr that method has access to as a third parameter
+  // console.log(arr);
+  // return mov * eurToUsd;
+  // with no debuging :
+  .map(mov => mov * eurToUsd)
+  // })
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(totalDepositsUSD);
