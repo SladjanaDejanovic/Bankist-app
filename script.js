@@ -51,7 +51,7 @@ const btnClose = document.querySelector('.form__btn--close');
 const btnSort = document.querySelector('.btn--sort');
 
 const inputLoginUsername = document.querySelector('.login__input--user');
-const inputLOginPin = document.querySelector('.login__input--pin');
+const inputLoginPin = document.querySelector('.login__input--pin');
 const inputTransferTo = document.querySelector('form__input--to');
 const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
@@ -116,17 +116,24 @@ const createUsernames = function (accs) {
 createUsernames(accounts);
 console.log(accounts);
 
-/////  pipeline (chaining methods)
-const eurToUsd = 1.1;
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-const totalDepositsUSD = movements
-  .filter(mov => mov > 0)
-  // .map((mov, i, arr) => {
-  //if there is a bug, we can check it with console.log by accessing arr that method has access to as a third parameter
-  // console.log(arr);
-  // return mov * eurToUsd;
-  // with no debuging :
-  .map(mov => mov * eurToUsd)
-  // })
-  .reduce((acc, mov) => acc + mov, 0);
-console.log(totalDepositsUSD);
+// Event handler
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  //Prevent form from submitting
+  e.preventDefault();
+
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and msg
+    //Display movements
+    //Display balance
+    // Display summary
+  }
+});
+
+//when button in form element, after we click the submit button default is to reload the page. to stop that from happening, we give a callback function the event parameter (e) and then calling a method on that event: e.preventDefault()
