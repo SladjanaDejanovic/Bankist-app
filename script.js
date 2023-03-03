@@ -127,7 +127,7 @@ btnLogin.addEventListener('click', function (e) {
     // Display UI and msg
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
-    }`; //with split we made array of first nad last name, and with [0] we take only first element of that array, which is first name
+    }`; //with split we made array of first and last name, and with [0] we take only first element of that array, which is first name
     containerApp.style.opacity = 100;
 
     // clear input fields
@@ -145,4 +145,14 @@ btnLogin.addEventListener('click', function (e) {
   }
 });
 
-//when button in form element, after we click the submit button default is to reload the page. to stop that from happening, we give a callback function the event parameter (e) and then calling a method on that event: e.preventDefault()
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+  console.log(amount);
+  console.log(receiverAcc);
+});
+
+//when button is in form element, after we click the submit button default is to reload the page. to stop that from happening, we give a callback function the event parameter (e) and then calling a method on that event: e.preventDefault()
