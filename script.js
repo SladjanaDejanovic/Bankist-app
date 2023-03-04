@@ -32,7 +32,7 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
-/// Elements
+////// Elements
 const labelWelcome = document.querySelector('.welcome');
 const labelDate = document.querySelector('.date');
 const labelBalance = document.querySelector('.balance__value');
@@ -52,12 +52,13 @@ const btnSort = document.querySelector('.btn--sort');
 
 const inputLoginUsername = document.querySelector('.login__input--user');
 const inputLoginPin = document.querySelector('.login__input--pin');
-const inputTransferTo = document.querySelector('form__input--to');
+const inputTransferTo = document.querySelector('.form__input--to');
 const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+// Display all movements
 const displayMovements = function (movements) {
   containerMovements.innerHTML = '';
 
@@ -75,11 +76,13 @@ const displayMovements = function (movements) {
   });
 };
 
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${balance}€`;
+// Show account's balance
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${acc.balance}€`;
 };
 
+// Show incomes, withdrawls and interest
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
@@ -99,6 +102,7 @@ const calcDisplaySummary = function (acc) {
   labelSumInterest.textContent = `${interest}€`;
 };
 
+// Make username for every account
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
@@ -110,7 +114,18 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
-// Event handler
+const updateUI = function (acc) {
+  // Display movements
+  displayMovements(acc.movements);
+
+  // Display balance
+  calcDisplayBalance(acc);
+
+  // Display summary
+  calcDisplaySummary(acc);
+};
+
+////// Event handler
 let currentAccount;
 
 btnLogin.addEventListener('click', function (e) {
@@ -122,7 +137,7 @@ btnLogin.addEventListener('click', function (e) {
   );
 
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
-    // we check if inputed account exist, and then check if its pin is valid
+    // check if inputed account exist, and then check if its pin is valid
 
     // Display UI and msg
     labelWelcome.textContent = `Welcome back, ${
@@ -130,29 +145,37 @@ btnLogin.addEventListener('click', function (e) {
     }`; //with split we made array of first and last name, and with [0] we take only first element of that array, which is first name
     containerApp.style.opacity = 100;
 
-    // clear input fields
+    // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur(); //making input field lose focus
 
-    //Display movements
-    displayMovements(currentAccount.movements);
-
-    //Display balance
-    calcDisplayBalance(currentAccount.movements);
-
-    // Display summary
-    calcDisplaySummary(currentAccount);
+    // Update UI
+    updateUI(currentAccount);
   }
 });
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
+
   const amount = Number(inputTransferAmount.value);
   const receiverAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
-  console.log(amount);
-  console.log(receiverAcc);
+  inputTransferAmount.value = inputTransferTo.value = '';
+
+  if (
+    amount > 0 &&
+    receiverAcc &&
+    currentAccount.balance >= amount &&
+    receiverAcc?.username !== currentAccount.username
+  ) {
+    // Doing the transfer
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+  }
+
+  // Update UI
+  updateUI(currentAccount);
 });
 
 //when button is in form element, after we click the submit button default is to reload the page. to stop that from happening, we give a callback function the event parameter (e) and then calling a method on that event: e.preventDefault()
