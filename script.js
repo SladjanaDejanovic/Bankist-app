@@ -131,7 +131,7 @@ let currentAccount;
 btnLogin.addEventListener('click', function (e) {
   //Prevent form from submitting
   e.preventDefault();
-
+  //when button is in form element, after we click the submit button default is to reload the page. to stop that from happening, we give a callback function the event parameter (e) and then calling a method on that event: e.preventDefault()
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
@@ -178,6 +178,19 @@ btnTransfer.addEventListener('click', function (e) {
   updateUI(currentAccount);
 });
 
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // Add movement
+    currentAccount.movements.push(amount);
+    //Update UI
+    updateUI(currentAccount);
+  }
+  inputLoanAmount.value = '';
+});
+
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
 
@@ -198,5 +211,3 @@ btnClose.addEventListener('click', function (e) {
 
   inputCloseUsername.value = inputClosePin.value = '';
 });
-
-//when button is in form element, after we click the submit button default is to reload the page. to stop that from happening, we give a callback function the event parameter (e) and then calling a method on that event: e.preventDefault()
