@@ -192,6 +192,21 @@ updateUI(currentAccount);
 containerApp.style.opacity = 100;
 /////
 
+//////// Experimenting API
+const now = new Date();
+const options = {
+  hours: 'numeric',
+  minutes: 'numeric',
+  day: 'numeric',
+  month: 'long', // 'numeric', '2-digit'
+  year: 'numeric',
+  weekday: 'short', //'long', 'narrow'
+};
+
+const locale = navigator.language;
+console.log(locale);
+labelDate.textContent = new Intl.DateTimeFormat(locale, options).format(now);
+
 btnLogin.addEventListener('click', function (e) {
   //Prevent form from submitting
   e.preventDefault();
@@ -211,12 +226,20 @@ btnLogin.addEventListener('click', function (e) {
 
     // Create current date and time
     const now = new Date();
-    const day = `${now.getDate()}`.padStart(2, 0);
-    const month = `${now.getMonth() + 1}`.padStart(2, 0); // bc months are 0 based
-    const year = now.getFullYear();
-    const hour = `${now.getHours()}`.padStart(2, 0);
-    const min = `${now.getMinutes()}`.padStart(2, 0);
-    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+    const options = {
+      hours: 'numeric',
+      minutes: 'numeric',
+      day: 'numeric',
+      month: 'long', // 'numeric', '2-digit'
+      year: 'numeric',
+      weekday: 'short', //'long', 'narrow'
+    };
+    const locale = navigator.language;
+    console.log(locale);
+
+    labelDate.textContent = new Intl.DateTimeFormat(locale, options).format(
+      now
+    );
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
