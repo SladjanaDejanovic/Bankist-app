@@ -88,7 +88,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
 //            Functions
 
 /////  Format date
-const formatMovementDate = function (date) {
+const formatMovementDate = function (date, locale) {
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
@@ -99,10 +99,11 @@ const formatMovementDate = function (date) {
   if (daysPassed === 1) return 'Yesterday';
   if (daysPassed <= 7) return `${daysPassed} days ago`;
   else {
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0); // bc months are 0 based
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    // const day = `${date.getDate()}`.padStart(2, 0);
+    // const month = `${date.getMonth() + 1}`.padStart(2, 0); // bc months are 0 based
+    // const year = date.getFullYear();
+    // return `${day}/${month}/${year}`;
+    return new Intl.DateTimeFormat(locale).format(date);
   }
 };
 
@@ -118,7 +119,7 @@ const displayMovements = function (acc, sort = false) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const date = new Date(acc.movementsDates[i]);
-    const displayDate = formatMovementDate(date);
+    const displayDate = formatMovementDate(date, acc.locale);
 
     const html = `
   <div class="movements__row">
@@ -204,7 +205,6 @@ const options = {
 };
 
 const locale = navigator.language;
-console.log(locale);
 labelDate.textContent = new Intl.DateTimeFormat(locale, options).format(now);
 
 btnLogin.addEventListener('click', function (e) {
@@ -227,15 +227,14 @@ btnLogin.addEventListener('click', function (e) {
     // Create current date and time
     const now = new Date();
     const options = {
-      hours: 'numeric',
-      minutes: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
       day: 'numeric',
-      month: 'long', // 'numeric', '2-digit'
+      month: 'numeric', // 'numeric', '2-digit'
       year: 'numeric',
-      weekday: 'short', //'long', 'narrow'
+      // weekday: 'short', //'long', 'narrow'
     };
-    const locale = navigator.language;
-    console.log(locale);
+    const locale = currentAccount.locale;
 
     labelDate.textContent = new Intl.DateTimeFormat(locale, options).format(
       now
