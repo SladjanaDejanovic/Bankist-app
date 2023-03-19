@@ -93,7 +93,7 @@ const formatMovementDate = function (date, locale) {
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
   const daysPassed = calcDaysPassed(new Date(), date);
-  console.log(daysPassed);
+  // console.log(daysPassed);
 
   if (daysPassed === 0) return 'Today';
   if (daysPassed === 1) return 'Yesterday';
@@ -107,9 +107,21 @@ const formatMovementDate = function (date, locale) {
   }
 };
 
+// func for formating curency, but it could be used in any app, parameters that we pass in func are kinda universal, reusable function that can take any value, locale and currency
+const formatCur = function (value, locale, currency) {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(value);
+};
+
 //////  Display all movements
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
+
+  if (!currentAccount) {
+    return;
+  }
 
   const movs = sort
     ? acc.movements.slice().sort((a, b) => a - b)
@@ -121,11 +133,13 @@ const displayMovements = function (acc, sort = false) {
     const date = new Date(acc.movementsDates[i]);
     const displayDate = formatMovementDate(date, acc.locale);
 
+    const formattedMov = formatCur(mov, acc.locale, acc.currency);
+
     const html = `
   <div class="movements__row">
   <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
   <div class="movements__date">${displayDate}</div>
-  <div class="movements__value">${mov.toFixed(2)}€</div>
+  <div class="movements__value">${formattedMov}</div>
   </div>
   `;
 
@@ -136,7 +150,8 @@ const displayMovements = function (acc, sort = false) {
 ///////  Show account's balance
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+
+  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
 
 /////  Show incomes, withdrawls and interest
@@ -144,19 +159,19 @@ const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+  labelSumIn.textContent = formatCur(incomes, acc.locale, acc.currency);
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = formatCur(Math.abs(out), acc.locale, acc.currency);
 
   const interest = acc.movements
     .filter(mov => mov > 0)
     .map(deposit => (deposit * acc.interestRate) / 100)
     .filter((int, i, arr) => int >= 1)
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = formatCur(interest, acc.locale, acc.currency);
 };
 
 //////  Make username for every account
@@ -188,10 +203,10 @@ const updateUI = function (acc) {
 let currentAccount;
 
 // FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
-/////
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
+// /////
 
 //////// Experimenting API
 const now = new Date();
@@ -206,6 +221,7 @@ const options = {
 
 const locale = navigator.language;
 labelDate.textContent = new Intl.DateTimeFormat(locale, options).format(now);
+////////////
 
 btnLogin.addEventListener('click', function (e) {
   //Prevent form from submitting
