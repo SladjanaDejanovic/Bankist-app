@@ -143,7 +143,7 @@ const displayMovements = function (acc, sort = false) {
   </div>
   `;
 
-    containerMovements.insertAdjacentHTML('afterbegin', html); // calling this method on element we want to add html to. this method takes 2 string: first is position in which we want to attach html, second is string containg html we ant to insert
+    containerMovements.insertAdjacentHTML('afterbegin', html); // calling this method on element we want to add html to. this method takes 2 string: first is position in which we want to attach html, second is string containg html we want to insert
   });
 };
 
