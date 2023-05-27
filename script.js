@@ -253,7 +253,7 @@ labelDate.textContent = new Intl.DateTimeFormat(locale, options).format(now);
 btnLogin.addEventListener('click', function (e) {
   //Prevent form from submitting
   e.preventDefault();
-  //when button is in form element, after we click the submit button default is to reload the page. to stop that from happening, we give a callback function the event parameter (e) and then call a method on that event: e.preventDefault()
+
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
