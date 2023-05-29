@@ -229,12 +229,6 @@ const startLogOutTimer = function () {
 //           Event handler
 let currentAccount, timer;
 
-// FAKE ALWAYS LOGGED IN
-// currentAccount = account1;
-// updateUI(currentAccount);
-// containerApp.style.opacity = 100;
-// /////
-
 //////// Experimenting API
 const now = new Date();
 const options = {
@@ -369,7 +363,7 @@ btnClose.addEventListener('click', function (e) {
   inputCloseUsername.value = inputClosePin.value = '';
 });
 
-// when we click on sort button we want to sort movements in order, and when we click again we want it to go back how it was. for this we are using state variable which will monitor are we currently sorting the array or not
+// when we click on sort button - we are using state variable which will monitor are we currently sorting the array or not
 
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
